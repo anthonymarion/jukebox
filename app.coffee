@@ -3,7 +3,8 @@
 youtube  =  require  'youtube-feeds'
 _        =  require  './underscore'
 express  =  require  'express'
-redis    =  require  'redis'
+
+redis = require './redis-connection'
 
 app = express()
 

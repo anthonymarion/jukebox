@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "main": "app.coffee",
   "dependencies": {
-    "coffee-script": "*"
+    "coffee-script": "*",
+    "youtube-feeds": "~1.0.3"
   }
 }

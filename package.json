@@ -1,0 +1,8 @@
+{
+  "name": "jukebox",
+  "version": "0.0.1",
+  "main": "app.coffee",
+  "dependencies": {
+    "coffee-script": "*"
+  }
+}

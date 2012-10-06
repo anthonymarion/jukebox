@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <% for(i in scripts) { %>
+      <script type="text/javascript" src="/javascripts/<%= scripts[i] %>.js"></script>
+    <% } %>
+  </head>
+  <body>
+    <div id="jukebox-yt-player">
+    </div>
+
+    <script type="text/javascript">
+    </script>
+  </body>
+</html>

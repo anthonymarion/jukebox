@@ -1,8 +1,8 @@
 height = 1
 width = 1
 
-height = 640
-width = 480
+#height = 640
+#width = 480
 
 playerId = "jukebox-yt-player"
 videoId = "5ShagXWQ6jI"

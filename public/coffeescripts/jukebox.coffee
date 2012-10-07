@@ -186,7 +186,6 @@ class exports.Jukebox
         return
 
       $.each data.entry, (i, entry) ->
-        console.log entry
         results.videos.push
           title: entry.title.$t
           url: entry.link[0].href

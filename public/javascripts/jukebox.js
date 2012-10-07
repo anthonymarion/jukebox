@@ -1,14 +1,14 @@
 (function() {
-  var Event, PAUSED, PLAYING, PlayerState, Quality, STOPPED, exports;
+  var Event, PlayState, PlayerState, Quality, exports;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   exports = window || module.exports;
 
-  PLAYING = 'Playing';
-
-  PAUSED = 'Paused';
-
-  STOPPED = 'Stopped';
+  PlayState = {
+    PLAYING: 'Playing',
+    PAUSED: 'Paused',
+    STOPPED: 'Stopped'
+  };
 
   Quality = {
     SMALL: 'small',
@@ -77,7 +77,7 @@
 
     Jukebox.prototype.loop = false;
 
-    Jukebox.prototype.playState = PAUSED;
+    Jukebox.prototype.playState = PlayState.PAUSED;
 
     Jukebox.prototype.currentJSONRequestId = 0;
 
@@ -135,26 +135,26 @@
     };
 
     Jukebox.prototype.togglePlayPause = function() {
-      if (this.playState === PLAYING) return this.pause();
+      if (this.playState === PlayState.PLAYING) return this.pause();
       return this.play();
     };
 
     Jukebox.prototype.play = function() {
       var _ref;
-      this.playState = PLAYING;
+      this.playState = PlayState.PLAYING;
       if ((_ref = this.player) != null) _ref.playVideo();
       return console.log(this.nowPlayingInfo());
     };
 
     Jukebox.prototype.pause = function() {
       var _ref;
-      this.playState = PAUSED;
+      this.playState = PlayState.PAUSED;
       return (_ref = this.player) != null ? _ref.pauseVideo() : void 0;
     };
 
     Jukebox.prototype.stop = function() {
       var _ref;
-      this.playState = STOPPED;
+      this.playState = PlayState.STOPPED;
       return (_ref = this.player) != null ? _ref.stopVideo() : void 0;
     };
 

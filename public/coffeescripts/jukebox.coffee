@@ -1,8 +1,10 @@
 exports = window || module.exports
 
-PLAYING = 'Playing'
-PAUSED = 'Paused'
-STOPPED = 'Stopped'
+PlayState = {
+  PLAYING: 'Playing'
+  PAUSED:  'Paused'
+  STOPPED: 'Stopped'
+}
 
 Quality = {
   SMALL:    'small'    #  240p
@@ -46,7 +48,7 @@ class exports.Jukebox
   quality: Quality.HIGHRES
   shuffle: false
   loop: false
-  playState: PAUSED
+  playState: PlayState.PAUSED
   # Internal JSON request series ID. If we've moved on (for example changed the request mid-request), let's cancel the current series.
   currentJSONRequestId: 0
   # used to update the view for updates to any outstanding JSON requests
@@ -88,20 +90,20 @@ class exports.Jukebox
     "Now playing: #{current.title} (Published #{current.published})"
 
   togglePlayPause: ->
-    return @pause() if @playState is PLAYING
+    return @pause() if @playState is PlayState.PLAYING
     @play()
 
   play: ->
-    @playState = PLAYING
+    @playState = PlayState.PLAYING
     @player?.playVideo()
     console.log @nowPlayingInfo()
 
   pause: ->
-    @playState = PAUSED
+    @playState = PlayState.PAUSED
     @player?.pauseVideo()
 
   stop: ->
-    @playState = STOPPED
+    @playState = PlayState.STOPPED
     @player?.stopVideo()
 
   setPlaylistAs: (results) =>

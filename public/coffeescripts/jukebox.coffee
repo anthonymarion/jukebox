@@ -4,14 +4,46 @@ PLAYING = 'Playing'
 PAUSED = 'Paused'
 STOPPED = 'Stopped'
 
+Quality = {
+  SMALL:    'small'    #  240p
+  MEDIUM:   'medium'   #  360p
+  LARGE:    'large'    #  480p
+  HD720:    'hd720'    #  720p
+  HD1080:   'hd1080'   #  1080p
+  HIGHRES:  'highres'  #  1080p+
+}
+
+PlayerState = {
+  UNSTARTED:  -1
+  ENDED:      0
+  PLAYING:    1
+  PAUSED:     2
+  BUFFERING:  3
+  VIDEOCUED:  5
+}
+
+class Event
+  handlers: null
+
+  constructor: ->
+    @handlers = []
+
+  addHandler: (handler) ->
+    @handlers.push handler
+
+  fire: =>
+    handler.apply(this, arguments) for handler in @handlers
+
 class exports.Jukebox
+  @onYoutubePlayerStateChange: new Event()
+
   currentVideoIndex: -1
   playlist: {}
   player: null
   channelType: null
   channelFriendlyName: null
   stateChangeCallback: null
-  quality: 'large'
+  quality: Quality.HIGHRES
   shuffle: false
   loop: false
   playState: PAUSED
@@ -20,10 +52,20 @@ class exports.Jukebox
   # used to update the view for updates to any outstanding JSON requests
   requestUpdateCallback: null
 
-  # TODO: make events: onPlaylistChanged, onPlayStatusChanged
+  # Events
+  onPlaylistChanged:    new Event()
+  onPlayStatusChanged:  new Event()
+  onSongEnded:          new Event()
+  onPlayerStateChanged: new Event()
 
   constructor: (@playerId) ->
     @player = document.getElementById(@playerId)
+
+    @onPlayerStateChanged.addHandler (state) =>
+      console.log "Player state changed to #{state}"
+      @playNext() if state is PlayerState.ENDED
+
+    exports.Jukebox.onYoutubePlayerStateChange.addHandler @onPlayerStateChanged.fire
 
   changeChannel: (user) ->
     @getChannelAsync(user, @setPlaylistAs) if user?
@@ -41,6 +83,10 @@ class exports.Jukebox
 
   setLoop: (@loop) ->
 
+  nowPlayingInfo: ->
+    current = @getCurrentVideo()
+    "Now playing: #{current.title} (Published #{current.published})"
+
   togglePlayPause: ->
     return @pause() if @playState is PLAYING
     @play()
@@ -48,6 +94,7 @@ class exports.Jukebox
   play: ->
     @playState = PLAYING
     @player?.playVideo()
+    console.log @nowPlayingInfo()
 
   pause: ->
     @playState = PAUSED
@@ -57,7 +104,7 @@ class exports.Jukebox
     @playState = STOPPED
     @player?.stopVideo()
 
-  setPlaylistAs: (results, updateCallback) =>
+  setPlaylistAs: (results) =>
     # reset the current video in the case of loading a new station
     if results.success
       @currentVideoIndex = -1
@@ -69,7 +116,6 @@ class exports.Jukebox
       @channel = null
       @playlist = null
       @stop()
-    updateCallback(@playlist, results.success) if updateCallback
     @playNext() if results.success?
 
   setQuality: (@quality) ->
@@ -82,7 +128,7 @@ class exports.Jukebox
     oldVideoIndex = @currentVideoIndex
     @player.loadVideoById video.id, 0, @quality
     @currentVideoIndex = playlistIndex
-    @playState = PLAYING
+    @play()
 
   playNext: ->
     if @shuffle && @playlist.length > 1
@@ -138,10 +184,12 @@ class exports.Jukebox
         return
 
       $.each data.entry, (i, entry) ->
+        console.log entry
         results.videos.push
           title: entry.title.$t
           url: entry.link[0].href
           id: entry.id.$t.substring(entry.id.$t.lastIndexOf('/') + 1)
+          published: (new Date(entry.published.$t)).toDateString()
 
       if results.videos.length < totalResults
         @requestUpdateCallback? {

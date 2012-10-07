@@ -1,5 +1,5 @@
 (function() {
-  var PAUSED, PLAYING, STOPPED, exports;
+  var Event, PAUSED, PLAYING, PlayerState, Quality, STOPPED, exports;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   exports = window || module.exports;
@@ -10,7 +10,54 @@
 
   STOPPED = 'Stopped';
 
+  Quality = {
+    SMALL: 'small',
+    MEDIUM: 'medium',
+    LARGE: 'large',
+    HD720: 'hd720',
+    HD1080: 'hd1080',
+    HIGHRES: 'highres'
+  };
+
+  PlayerState = {
+    UNSTARTED: -1,
+    ENDED: 0,
+    PLAYING: 1,
+    PAUSED: 2,
+    BUFFERING: 3,
+    VIDEOCUED: 5
+  };
+
+  Event = (function() {
+
+    Event.prototype.handlers = null;
+
+    function Event() {
+      this.fire = __bind(this.fire, this);      this.handlers = [];
+    }
+
+    Event.prototype.addHandler = function(handler) {
+      return this.handlers.push(handler);
+    };
+
+    Event.prototype.fire = function() {
+      var handler, _i, _len, _ref, _results;
+      _ref = this.handlers;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        handler = _ref[_i];
+        _results.push(handler.apply(this, arguments));
+      }
+      return _results;
+    };
+
+    return Event;
+
+  })();
+
   exports.Jukebox = (function() {
+
+    Jukebox.onYoutubePlayerStateChange = new Event();
 
     Jukebox.prototype.currentVideoIndex = -1;
 
@@ -24,7 +71,7 @@
 
     Jukebox.prototype.stateChangeCallback = null;
 
-    Jukebox.prototype.quality = 'large';
+    Jukebox.prototype.quality = Quality.HIGHRES;
 
     Jukebox.prototype.shuffle = false;
 
@@ -36,11 +83,25 @@
 
     Jukebox.prototype.requestUpdateCallback = null;
 
+    Jukebox.prototype.onPlaylistChanged = new Event();
+
+    Jukebox.prototype.onPlayStatusChanged = new Event();
+
+    Jukebox.prototype.onSongEnded = new Event();
+
+    Jukebox.prototype.onPlayerStateChanged = new Event();
+
     function Jukebox(playerId) {
+      var _this = this;
       this.playerId = playerId;
       this.getChannelAsync = __bind(this.getChannelAsync, this);
       this.setPlaylistAs = __bind(this.setPlaylistAs, this);
       this.player = document.getElementById(this.playerId);
+      this.onPlayerStateChanged.addHandler(function(state) {
+        console.log("Player state changed to " + state);
+        if (state === PlayerState.ENDED) return _this.playNext();
+      });
+      exports.Jukebox.onYoutubePlayerStateChange.addHandler(this.onPlayerStateChanged.fire);
     }
 
     Jukebox.prototype.changeChannel = function(user) {
@@ -67,6 +128,12 @@
       this.loop = loop;
     };
 
+    Jukebox.prototype.nowPlayingInfo = function() {
+      var current;
+      current = this.getCurrentVideo();
+      return "Now playing: " + current.title + " (Published " + current.published + ")";
+    };
+
     Jukebox.prototype.togglePlayPause = function() {
       if (this.playState === PLAYING) return this.pause();
       return this.play();
@@ -75,7 +142,8 @@
     Jukebox.prototype.play = function() {
       var _ref;
       this.playState = PLAYING;
-      return (_ref = this.player) != null ? _ref.playVideo() : void 0;
+      if ((_ref = this.player) != null) _ref.playVideo();
+      return console.log(this.nowPlayingInfo());
     };
 
     Jukebox.prototype.pause = function() {
@@ -90,7 +158,7 @@
       return (_ref = this.player) != null ? _ref.stopVideo() : void 0;
     };
 
-    Jukebox.prototype.setPlaylistAs = function(results, updateCallback) {
+    Jukebox.prototype.setPlaylistAs = function(results) {
       if (results.success) {
         this.currentVideoIndex = -1;
         this.channel = results.identifier;
@@ -102,7 +170,6 @@
         this.playlist = null;
         this.stop();
       }
-      if (updateCallback) updateCallback(this.playlist, results.success);
       if (results.success != null) return this.playNext();
     };
 
@@ -119,7 +186,7 @@
       oldVideoIndex = this.currentVideoIndex;
       this.player.loadVideoById(video.id, 0, this.quality);
       this.currentVideoIndex = playlistIndex;
-      return this.playState = PLAYING;
+      return this.play();
     };
 
     Jukebox.prototype.playNext = function() {
@@ -180,10 +247,12 @@
           return;
         }
         $.each(data.entry, function(i, entry) {
+          console.log(entry);
           return results.videos.push({
             title: entry.title.$t,
             url: entry.link[0].href,
-            id: entry.id.$t.substring(entry.id.$t.lastIndexOf('/') + 1)
+            id: entry.id.$t.substring(entry.id.$t.lastIndexOf('/') + 1),
+            published: (new Date(entry.published.$t)).toDateString()
           });
         });
         if (results.videos.length < totalResults) {

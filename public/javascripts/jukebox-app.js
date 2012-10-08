@@ -1,13 +1,9 @@
 (function() {
   var atts, height, params, playerId, videoId, width;
 
-  height = 1;
+  height = $(window).height();
 
-  width = 1;
-
-  height = 640;
-
-  width = 480;
+  width = $(window).width();
 
   playerId = "jukebox-yt-player";
 
@@ -21,7 +17,7 @@
     id: playerId
   };
 
-  swfobject.embedSWF("http://www.youtube.com/v/" + videoId + "?enablejsapi=1&playerapiid=" + playerId + "&version=3", playerId, height, width, "8", null, null, params, atts);
+  swfobject.embedSWF("http://www.youtube.com/v/" + videoId + "?enablejsapi=1&playerapiid=" + playerId + "&version=3", playerId, width, height, "8", null, null, params, atts);
 
   window.onYouTubePlayerReady = function(playerId) {
     var channel, jukebox, player;
@@ -29,7 +25,11 @@
     jukebox = window.jukebox = new Jukebox(playerId);
     jukebox.changeChannel(channel);
     player = document.getElementById(playerId);
-    return player.addEventListener('onStateChange', 'Jukebox.onYoutubePlayerStateChange.fire');
+    player.addEventListener('onStateChange', 'Jukebox.onYoutubePlayerStateChange.fire');
+    return $(window).resize(function() {
+      player.setAttribute('height', $(window).height());
+      return player.setAttribute('width', $(window).width());
+    });
   };
 
 }).call(this);

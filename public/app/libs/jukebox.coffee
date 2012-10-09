@@ -53,14 +53,20 @@ class Jukebox
   # used to update the view for updates to any outstanding JSON requests
   requestUpdateCallback: null
 
+  @updateRate: 100 # Update loop 10 times a second
+
   # Events
-  onPlaylistChanged:    new Event()
-  onPlayStatusChanged:  new Event()
-  onSongEnded:          new Event()
-  onPlayerStateChanged: new Event()
+  onLoadingNewPlaylist:          new  Event()
+  onPlaylistChanged:             new  Event()
+  onPlayStatusChanged:           new  Event()
+  onSongEnded:                   new  Event()
+  onPlayerStateChanged:          new  Event()
+  onVideoChanged:                new  Event()
+  onVideoProgressTimeChanged:    new  Event()
+  onVideoLoadedProgressChanged:  new  Event()
 
   constructor: (@playerId) ->
-    @player = document.getElementById(@playerId)
+    @setPlayer document.getElementById(@playerId)
 
     @onPlayerStateChanged.addHandler (state) =>
       console.log "Player state changed to #{state}"
@@ -68,7 +74,26 @@ class Jukebox
 
     Jukebox.onYoutubePlayerStateChange.addHandler @onPlayerStateChanged.fire
 
+    setTimeout @updateLoop, @updateRate
+
+  updateLoop: =>
+    setTimeout @updateLoop, @updateRate
+    return if not @player?
+
+    #FIXME: Translate this to an actual time
+    videoLoadedFraction = @player.getVideoLoadedFraction()
+    if videoLoadedFraction isnt @videoLoadedFraction
+      @videoLoadedFraction = videoLoadedFraction
+      @onVideoLoadedProgressChanged.fire videoLoadedFraction
+
+    videoProgressTime = @player.getCurrentTime()
+    if videoProgressTime isnt @videoProgressTime
+      @videoProgressTime = videoProgressTime
+      @onVideoProgressTimeChanged.fire videoProgressTime
+
   setPlayer: (@player) ->
+    # Set up the different event handlers
+    @player
 
   changeChannel: (user) ->
     @getChannelAsync(user, @setPlaylistAs) if user? and user isnt @channel
@@ -108,7 +133,8 @@ class Jukebox
 
   nowPlayingInfo: ->
     current = @getCurrentVideo()
-    "Now playing: #{current.title} (Published #{current.published})"
+    return if not current
+    "#{current.title}"
 
   togglePlayPause: ->
     return @pause() if @playState is Jukebox.PlayState.PLAYING
@@ -117,7 +143,6 @@ class Jukebox
   play: ->
     @playState = Jukebox.PlayState.PLAYING
     @player?.playVideo()
-    console.log @nowPlayingInfo()
 
   pause: ->
     @playState = Jukebox.PlayState.PAUSED
@@ -139,7 +164,7 @@ class Jukebox
       @channel = null
       @playlist = null
       @stop()
-    @playNext() if results.success?
+    @playNext() if results.success? # TODO: maybe an autoplay setting?
 
   setQuality: (@quality) ->
     @player?.setPlaybackQuality(@quality)
@@ -152,6 +177,8 @@ class Jukebox
     @player.loadVideoById video.id, 0, @quality
     @currentVideoIndex = playlistIndex
     @play()
+
+    @onVideoChanged.fire video
 
   playNext: ->
     if @shuffle && @playlist.length > 1
@@ -172,7 +199,7 @@ class Jukebox
     else if @loop
       prevVideo = (@currentVideoIndex - 1 + @playlist.length) % @playlist.length
     else
-      nextVideo = @currentVideoIndex - 1
+      prevVideo = @currentVideoIndex - 1
 
     @playVideo prevVideo
 
@@ -182,14 +209,16 @@ class Jukebox
   # @param callback function(results)
   # @param results object results from last call
   getChannelAsync: (user, callback, results=null) =>
-    results = {
-      type: 'channel'
-      identifier: user
-      friendlyName: user
-      seriesId: ++@currentJSONRequestId
-      success: true
-      videos: []
-    } if results is null
+    if results is null
+      @onLoadingNewPlaylist.fire user
+      results = {
+        type: 'channel'
+        identifier: user
+        friendlyName: user
+        seriesId: ++@currentJSONRequestId
+        success: true
+        videos: []
+      }
 
     # if the current request series doesn't match this path's request series, kill this.
     return console.error("Killing request, request ID does not match") if results.seriesId isnt @currentJSONRequestId
@@ -212,6 +241,8 @@ class Jukebox
           url: entry.link[0].href
           id: entry.id.$t.substring(entry.id.$t.lastIndexOf('/') + 1)
           published: (new Date(entry.published.$t)).toDateString()
+          length: entry.media$group.media$content[0]?.duration
+          raw: entry
 
       if results.videos.length < totalResults
         @requestUpdateCallback? {

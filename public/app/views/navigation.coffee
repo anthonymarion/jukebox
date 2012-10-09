@@ -16,9 +16,8 @@ class NavigationView extends Backbone.View
     window.jukebox.changeChannel event.currentTarget.getAttribute 'data-value'
 
   render: ->
-    @$el.html template(
+    @$el.html template
       qualities: Jukebox.getQualities()
       channels: Jukebox.getChannels()
-    )
 
 module.exports = NavigationView

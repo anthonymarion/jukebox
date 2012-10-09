@@ -9,7 +9,6 @@ class NavigationView extends Backbone.View
     @render()
 
   handleQualityChange: (ev) =>
-    console.log 'in handleQualityChange', ev.currentTarget, ev.currentTarget.getAttribute 'data-value'
     window.jukebox.setQuality ev.currentTarget.getAttribute 'data-value'
 
   render: ->

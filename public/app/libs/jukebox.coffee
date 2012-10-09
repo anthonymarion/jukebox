@@ -40,6 +40,7 @@ class Jukebox
   currentVideoIndex: -1
   playlist: {}
   player: null
+  channel: null
   channelType: null
   channelFriendlyName: null
   stateChangeCallback: null
@@ -70,7 +71,7 @@ class Jukebox
   setPlayer: (@player) ->
 
   changeChannel: (user) ->
-    @getChannelAsync(user, @setPlaylistAs) if user?
+    @getChannelAsync(user, @setPlaylistAs) if user? and user isnt @channel
 
   @getQualities: ->
     [
@@ -80,6 +81,16 @@ class Jukebox
       { desc: 'HD-720p (720p)', value: @Quality.HD720 }
       { desc: 'HD-1080p (1080p)', value: @Quality.HD1080 }
       { desc: 'Highest Quality (1080p+)', value: @Quality.HIGHRES }
+    ]
+
+  # TODO: Some kind of editing here for this. Might need to be moved into a model/collection.
+  @getChannels: ->
+    [
+      { id: 'liquicity', name: 'Liquicity' }
+      { id: 'UKFMusic', name: 'UKF Music' }
+      { id: 'UKFDubstep', name: 'UKF Dubstep' }
+      { id: 'UKFMixes', name: 'UKF Mixes' }
+      { id: 'UKFDrumAndBass', name: 'UKF Drum & Bass' }
     ]
 
   getCurrentVideo: ->

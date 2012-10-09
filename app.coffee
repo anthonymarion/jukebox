@@ -41,8 +41,8 @@ app.configure ->
   }
 
   fileifyTemplates = fileify('templates', "#{publicDir}/app/templates", {
-    extension: 'mjs'
-    watch: true
+    extension: '.mjs'
+    removeExtension: true
   })
   bundle.use fileifyTemplates
 

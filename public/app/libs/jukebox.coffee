@@ -1,29 +1,3 @@
-exports = window || module.exports
-
-PlayState = {
-  PLAYING: 'Playing'
-  PAUSED:  'Paused'
-  STOPPED: 'Stopped'
-}
-
-Quality = {
-  SMALL:    'small'    #  240p
-  MEDIUM:   'medium'   #  360p
-  LARGE:    'large'    #  480p
-  HD720:    'hd720'    #  720p
-  HD1080:   'hd1080'   #  1080p
-  HIGHRES:  'highres'  #  1080p+
-}
-
-PlayerState = {
-  UNSTARTED:  -1
-  ENDED:      0
-  PLAYING:    1
-  PAUSED:     2
-  BUFFERING:  3
-  VIDEOCUED:  5
-}
-
 class Event
   handlers: null
 
@@ -36,7 +10,31 @@ class Event
   fire: =>
     handler.apply(this, arguments) for handler in @handlers
 
-class exports.Jukebox
+class Jukebox
+  @Quality: {
+    SMALL:    'small'    #  240p
+    MEDIUM:   'medium'   #  360p
+    LARGE:    'large'    #  480p
+    HD720:    'hd720'    #  720p
+    HD1080:   'hd1080'   #  1080p
+    HIGHRES:  'highres'  #  1080p+
+  }
+
+  @PlayerState: {
+    UNSTARTED:  -1
+    ENDED:      0
+    PLAYING:    1
+    PAUSED:     2
+    BUFFERING:  3
+    VIDEOCUED:  5
+  }
+
+  @PlayState: {
+    PLAYING: 'Playing'
+    PAUSED:  'Paused'
+    STOPPED: 'Stopped'
+  }
+
   @onYoutubePlayerStateChange: new Event()
 
   currentVideoIndex: -1
@@ -45,10 +43,10 @@ class exports.Jukebox
   channelType: null
   channelFriendlyName: null
   stateChangeCallback: null
-  quality: Quality.HIGHRES
+  quality: Jukebox.Quality.HIGHRES
   shuffle: false
   loop: false
-  playState: PlayState.PAUSED
+  playState: @PlayState.PAUSED
   # Internal JSON request series ID. If we've moved on (for example changed the request mid-request), let's cancel the current series.
   currentJSONRequestId: 0
   # used to update the view for updates to any outstanding JSON requests
@@ -65,12 +63,24 @@ class exports.Jukebox
 
     @onPlayerStateChanged.addHandler (state) =>
       console.log "Player state changed to #{state}"
-      @playNext() if state is PlayerState.ENDED
+      @playNext() if state is Jukebox.PlayerState.ENDED
 
-    exports.Jukebox.onYoutubePlayerStateChange.addHandler @onPlayerStateChanged.fire
+    Jukebox.onYoutubePlayerStateChange.addHandler @onPlayerStateChanged.fire
+
+  setPlayer: (@player) ->
 
   changeChannel: (user) ->
     @getChannelAsync(user, @setPlaylistAs) if user?
+
+  @getQualities: ->
+    [
+      { desc: 'Small (240p)', value: @Quality.SMALL }
+      { desc: 'Medium (360p)', value: @Quality.MEDIUM }
+      { desc: 'Large (480p)', value: @Quality.LARGE }
+      { desc: 'HD-720p (720p)', value: @Quality.HD720 }
+      { desc: 'HD-1080p (1080p)', value: @Quality.HD1080 }
+      { desc: 'Highest Quality (1080p+)', value: @Quality.HIGHRES }
+    ]
 
   getCurrentVideo: ->
     @playlist[@currentVideoIndex]
@@ -90,20 +100,20 @@ class exports.Jukebox
     "Now playing: #{current.title} (Published #{current.published})"
 
   togglePlayPause: ->
-    return @pause() if @playState is PlayState.PLAYING
+    return @pause() if @playState is Jukebox.PlayState.PLAYING
     @play()
 
   play: ->
-    @playState = PlayState.PLAYING
+    @playState = Jukebox.PlayState.PLAYING
     @player?.playVideo()
     console.log @nowPlayingInfo()
 
   pause: ->
-    @playState = PlayState.PAUSED
+    @playState = Jukebox.PlayState.PAUSED
     @player?.pauseVideo()
 
   stop: ->
-    @playState = PlayState.STOPPED
+    @playState = Jukebox.PlayState.STOPPED
     @player?.stopVideo()
 
   setPlaylistAs: (results) =>
@@ -204,3 +214,4 @@ class exports.Jukebox
       else
         callback results
 
+module.exports = Jukebox

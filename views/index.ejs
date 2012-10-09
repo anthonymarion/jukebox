@@ -6,27 +6,16 @@
 		<link rel='stylesheet' href='/stylesheets/bootstrap.css' />
 		<script type="text/javascript" src="/browserify.js"></script>
 		<% for(i in scripts) { %>
-		<script type="text/javascript" src="/javascripts/<%= scripts[i] %>.js"></script>
+			<script type="text/javascript" src="/javascripts/<%= scripts[i] %>.js"></script>
 		<% } %>
 	</head>
 	<body>
+		<div id="jukebox"></div>
 		<script type="text/javascript">
-			//var app = require('./app');
+			var App = require('./app');
+			new App({
+				el: $('#jukebox')
+			});
 		</script>
-		<!--
-		<div class="navbar">
-			<div class="navbar-inner">
-				<a class="brand" href="#">Jukebox</a>
-				<ul class="nav">
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Quality</a>
-						<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-							<li><a>Small (240p)</a><li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-		-->
 	</body>
 </html>

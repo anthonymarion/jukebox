@@ -6,9 +6,7 @@ exports.index = (req, res) ->
       'bootstrap'
       'swfobject'
       'backbone'
-
-      'jukebox'
-      'jukebox-app'
+      'handlebars'
     ]
     title: "Jukebox"
 

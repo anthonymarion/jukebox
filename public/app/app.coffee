@@ -21,6 +21,6 @@ class JukeboxApp extends Backbone.View
       return if playerId isnt @playerId
       @jukebox.changeChannel 'liquicity'
       @jukebox.setPlayer document.getElementById playerId
-      player.addEventListener 'onStateChange', 'window.Jukebox.onYoutubePlayerStateChange.fire'
+      @jukebox.player.addEventListener 'onStateChange', 'window.Jukebox.onYoutubePlayerStateChange.fire'
 
 module.exports = JukeboxApp

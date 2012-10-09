@@ -2,9 +2,11 @@ exports.index = (req, res) ->
   res.render "index",
     scripts: [
       'jquery'
-      'bootstrap'
       'underscore'
+      'bootstrap'
       'swfobject'
+      'backbone'
+
       'jukebox'
       'jukebox-app'
     ]

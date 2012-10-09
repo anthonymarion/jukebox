@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <% for(i in scripts) { %>
-      <script type="text/javascript" src="/javascripts/<%= scripts[i] %>.js"></script>
-    <% } %>
-  </head>
-  <body>
-    <!--<div id="jukebox-yt-player" style="display: hidden">-->
-		<!--</div>-->
-	<div>
-  </body>
+	<head>
+		<title><%= title %></title>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+		<script type="text/javascript" src="/browserify.js"></script>
+		<% for(i in scripts) { %>
+		<script type="text/javascript" src="/javascripts/<%= scripts[i] %>.js"></script>
+		<% } %>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//var app = require('./app');
+		</script>
+		<!--
+		<div class="navbar">
+			<div class="navbar-inner">
+				<a class="brand" href="#">Jukebox</a>
+				<ul class="nav">
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Quality</a>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+							<li><a>Small (240p)</a><li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+		-->
+	</body>
 </html>

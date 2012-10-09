@@ -1,12 +1,13 @@
 ###
 Module dependencies.
 ###
-
-express  =  require "express"
-routes   =  require "./routes"
-user     =  require "./routes/user"
-http     =  require "http"
-path     =  require "path"
+express     =  require  "express"
+routes      =  require  "./routes"
+user        =  require  "./routes/user"
+http        =  require  "http"
+path        =  require  "path"
+browserify  =  require  "browserify"
+fileify     =  require  "fileify"
 
 app = express()
 
@@ -32,7 +33,22 @@ app.configure ->
     path: publicDir
   }
 
-  app.use express.static(path.join(__dirname, "public"))
+  bundle = browserify {
+    ignore: [ 'templates' ]
+    require: [
+      './public/app/app.coffee'
+    ]
+  }
+
+  fileifyTemplates = fileify('templates', "#{publicDir}/app/templates", {
+    extension: 'mjs'
+    watch: true
+  })
+  bundle.use fileifyTemplates
+
+  app.use bundle
+
+  app.use express.static(publicDir)
 
 app.configure "development", ->
   app.use express.errorHandler()

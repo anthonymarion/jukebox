@@ -1,11 +1,8 @@
-
-#
-# * GET home page.
-# 
 exports.index = (req, res) ->
   res.render "index",
     scripts: [
       'jquery'
+      'bootstrap'
       'underscore'
       'swfobject'
       'jukebox'

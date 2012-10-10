@@ -52,7 +52,9 @@ class PlayerControlsView extends Backbone.View
     return "#{minutes}:#{seconds}"
 
   onPlayerStateChanged: (newState) =>
+    console.log newState
     @$('.progress .status-text').text('Buffering...') if newState is Jukebox.PlayerState.BUFFERING
+    @$('.progress .status-text').text('Loading...') if newState is Jukebox.PlayerState.UNSTARTED
 
   onVideoProgressTimeChanged: (@videoProgressTime) =>
     @$('.progress .bar').css('width', (@videoProgressTime / @totalPlayTime) * 100 + '%')

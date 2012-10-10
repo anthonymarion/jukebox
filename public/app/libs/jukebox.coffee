@@ -172,12 +172,14 @@ class Jukebox
       @channel = null
       @playlist = null
       @stop()
+    @onPlaylistChanged.fire @playlist
     @playNext() if results.success? # TODO: maybe an autoplay setting?
 
   setQuality: (@quality) ->
     @player?.setPlaybackQuality(@quality)
 
   playVideo: (playlistIndex) ->
+    playlistIndex = parseInt playlistIndex
     return if not ( @player and @playlist[playlistIndex] )
 
     video = @playlist[playlistIndex]
@@ -196,6 +198,7 @@ class Jukebox
       nextVideo = (@currentVideoIndex + 1) % @playlist.length
     else
       nextVideo = @currentVideoIndex + 1
+    console.log "Playing next video: #{nextVideo}"
 
     @playVideo nextVideo
 
@@ -245,6 +248,7 @@ class Jukebox
 
       $.each data.entry, (i, entry) ->
         results.videos.push
+          index: results.videos.length
           title: entry.title.$t
           url: entry.link[0].href
           id: entry.id.$t.substring(entry.id.$t.lastIndexOf('/') + 1)

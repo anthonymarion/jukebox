@@ -3,6 +3,7 @@ Jukebox = window.Jukebox = require './libs/jukebox'
 
 NavigationView = require './views/navigation'
 PlayerControlsView = require './views/playerControls'
+PlaylistView = require './views/playlist'
 
 class JukeboxApp extends Backbone.View
   playerId: "jukebox-yt-player"
@@ -13,6 +14,7 @@ class JukeboxApp extends Backbone.View
     @initializeYoutubePlayer()
     @navigationView = new NavigationView(el: @$('#nav'), jukebox: @jukebox)
     @playerControlsView = new PlayerControlsView(el: @$('#controls'), jukebox: @jukebox)
+    @playlistView = new PlaylistView(el: @$('#playlist'), jukebox: @jukebox)
 
   render: ->
     @$el.html layout()
@@ -41,7 +43,7 @@ class JukeboxApp extends Backbone.View
           onStateChange: onStateChange
       })
 
-    if window.YT
+    if window.YT?.Player
       setupYoutubePlayer()
     else
       window.onYouTubeIframeAPIReady = setupYoutubePlayer

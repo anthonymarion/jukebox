@@ -26,7 +26,10 @@ app.configure ->
   publicDir = "#{__dirname}/public"
 
   app.use require("less-middleware") {
-    src: publicDir
+    src: "#{publicDir}/less"
+    dest: "#{publicDir}/stylesheets"
+    prefix: '/stylesheets'
+    compress: false
   }
 
   app.use require("express-coffee") {
@@ -34,6 +37,7 @@ app.configure ->
   }
 
   bundle = browserify {
+    cache: false
     ignore: [ 'templates' ]
     require: [
       './public/app/app.coffee'
@@ -41,6 +45,7 @@ app.configure ->
   }
 
   fileifyTemplates = fileify('templates', "#{publicDir}/app/templates", {
+    watch: true
     extension: '.mjs'
     removeExtension: true
   })

@@ -2,7 +2,11 @@ body {
   background-image: url('/images/textured_stripes.png');
 }
 #yt-player-outer {
-  display: none;
+  height: 300;
+  width: 400;
+  text-align: center;
+  /*display: none;*/
+
 }
 #controls .row #control-box {
   background-color: rgba(170, 170, 170, 0.3);

@@ -1,6 +1,6 @@
 <div class="navbar">
   <div class="navbar-inner">
-    <a class="brand" href="#">Jukebox</a>
+    <div class="brand" href="#">Jukebox</div>
     <ul class="nav">
       <li id="quality" class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#">Quality</a>

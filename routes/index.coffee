@@ -4,7 +4,6 @@ exports.index = (req, res) ->
       'jquery'
       'underscore'
       'bootstrap'
-      'swfobject'
       'backbone'
       'handlebars'
     ]

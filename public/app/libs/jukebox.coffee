@@ -116,6 +116,7 @@ class Jukebox
       { id: 'UKFDubstep', name: 'UKF Dubstep' }
       { id: 'UKFMixes', name: 'UKF Mixes' }
       { id: 'UKFDrumAndBass', name: 'UKF Drum & Bass' }
+      { id: 'karmincovers', name: 'Karmin Covers' }
     ]
 
   getCurrentVideo: ->

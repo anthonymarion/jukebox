@@ -1,8 +1,8 @@
 body {
   background-image: url('/images/textured_stripes.png');
 }
-#jukebox-yt-player {
-  display: hidden;
+#yt-player-outer {
+  display: none;
 }
 #controls .row #control-box {
   background-color: rgba(170, 170, 170, 0.3);

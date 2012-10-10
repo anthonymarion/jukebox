@@ -18,14 +18,25 @@ class JukeboxApp extends Backbone.View
     @$el.html layout()
 
   initializeYoutubePlayer: ->
-    width = 1
-    height = 1
+    width = 400
+    height = 300
     defaultVideoId = "5ShagXWQ6jI"
-    swfobject.embedSWF "http://www.youtube.com/v/#{defaultVideoId}?enablejsapi=1&playerapiid=#{@playerId}&version=3", @playerId, width, height, "8", null, null, { allowScriptAccess: 'always' }, { id: @playerId }
-    window.onYouTubePlayerReady = (playerId) =>
-      return if playerId isnt @playerId
+
+    onPlayerReady = (event) ->
+      console.log 'Player ready'
+      @jukebox.setPlayer event.target
       @jukebox.changeChannel 'liquicity'
-      @jukebox.setPlayer document.getElementById playerId
       @jukebox.player.addEventListener 'onStateChange', 'window.Jukebox.onYoutubePlayerStateChange.fire'
+
+    window.onYouTubeIframeAPIReady = =>
+      console.log 'Youtube ready'
+      player = new YT.Player(@playerId, {
+        height: height
+        width: width
+        videoId: defaultVideoId
+        events:
+          onReady: onPlayerReady
+          #onStateChange: onPlayerStateChange
+      })
 
 module.exports = JukeboxApp

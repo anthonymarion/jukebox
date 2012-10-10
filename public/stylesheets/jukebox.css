@@ -7,3 +7,9 @@ body {
 #controls .row #control-box {
   background-color: rgba(170, 170, 170, 0.3);
 }
+#controls .media-controls a {
+  color: black;
+}
+#controls .media-controls a :hover {
+  text-decoration: none;
+}

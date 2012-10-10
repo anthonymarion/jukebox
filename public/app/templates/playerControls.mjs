@@ -8,7 +8,7 @@
         <div class="bar" style="width: {{progressPercent}}%"></div>
       </div>
     </div>
-    <div class="span3">
+    <div class="span3 media-controls">
       <a id="back"><i class="icon-backward"></i></a>
       <a id="pause"><i class="icon-pause"></i></a>
       <a id="play"><i class="icon-play"></i></a>

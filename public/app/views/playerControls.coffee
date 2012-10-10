@@ -21,10 +21,10 @@ class PlayerControlsView extends Backbone.View
     window.jukebox.onVideoLoadedProgressChanged.addHandler @onVideoLoadedProgressChanged
     window.jukebox.onLoadingNewPlaylist.addHandler @onLoadingNewPlaylist
     window.jukebox.onPlayerStateChanged.addHandler @onPlayerStateChanged
+    window.jukebox.onLoopChanged.addHandler @onLoopChanged
+    window.jukebox.onShuffleChanged.addHandler @onShuffleChanged
 
   onLoadingNewPlaylist: (@playlist) =>
-    console.log "Loading #{@playlist}"
-    console.log @$('#now-playing-info')
     @$('#now-playing-info').text "Loading playlist #{@playlist}..."
 
   onVideoChanged: (@videoInfo) =>
@@ -32,6 +32,18 @@ class PlayerControlsView extends Backbone.View
     @totalPlayTime = @videoInfo.length
     @$('.progress .bar').css('width', (@videoProgressTime / @totalPlayTime) * 100 + '%')
     @render()
+
+  onLoopChanged: (loopState) =>
+    if not loopState
+      @$('#loop').addClass 'disabled'
+    else
+      @$('#loop').removeClass 'disabled'
+
+  onShuffleChanged: (shuffleState) =>
+    if not shuffleState
+      @$('#shuffle').addClass 'disabled'
+    else
+      @$('#shuffle').removeClass 'disabled'
 
   formatTime: (seconds) ->
     minutes = parseInt seconds / 60
@@ -79,6 +91,8 @@ class PlayerControlsView extends Backbone.View
       details: window.jukebox.nowPlayingInfo() or 'Select a channel to begin!'
       progressPercent: (@videoProgressTime / @totalPlayTime) * 100
       statusText: 'Loading...'
+      shuffle: window.jukebox.shuffle
+      loop: window.jukebox.loop
     }
 
 module.exports = PlayerControlsView

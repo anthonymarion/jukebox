@@ -14,8 +14,8 @@
       <a id="pause"><i class="icon-pause"></i></a>
       <a id="play"><i class="icon-play"></i></a>
       <a id="next"><i class="icon-forward"></i></a>
-      <a id="shuffle"><i class="icon-random"></i></a>
-      <a id="loop"><i class="icon-repeat"></i></a>
+      <a id="shuffle" class="{{#unless shuffle}}disabled{{/unless}}"><i class="icon-random"></i></a>
+      <a id="loop" class="{{#unless loop}}disabled{{/unless}}"><i class="icon-repeat"></i></a>
       <!--<a id="fullscreen"><i class="icon-fullscreen"></i></a>-->
     </div>
   </div>

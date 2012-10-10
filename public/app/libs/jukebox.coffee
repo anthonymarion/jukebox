@@ -64,6 +64,8 @@ class Jukebox
   onVideoChanged:                new  Event()
   onVideoProgressTimeChanged:    new  Event()
   onVideoLoadedProgressChanged:  new  Event()
+  onLoopChanged:                 new  Event()
+  onShuffleChanged:              new  Event()
 
   constructor: (@playerId) ->
     @setPlayer document.getElementById(@playerId)
@@ -126,11 +128,13 @@ class Jukebox
     @setShuffle not @shuffle
 
   setShuffle: (@shuffle) ->
+    @onShuffleChanged.fire @shuffle
 
   toggleLoop: ->
     @setLoop not @loop
 
   setLoop: (@loop) ->
+    @onLoopChanged.fire @loop
 
   nowPlayingInfo: ->
     current = @getCurrentVideo()

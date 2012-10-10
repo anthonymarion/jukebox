@@ -15,6 +15,9 @@ body {
 #controls .media-controls a :hover {
   text-decoration: none;
 }
+#controls .media-controls a.disabled {
+  color: #999999;
+}
 #controls .status-text {
   position: absolute;
   margin-left: 5px;

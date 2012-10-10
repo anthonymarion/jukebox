@@ -21,7 +21,7 @@
     </ul>
     <ul class="nav pull-right">
       <li>
-        <a>B-b-but its a b-b-beta</a>
+        <a>B-but its a b-beta</a>
       </li>
     </ul>
   </div>

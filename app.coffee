@@ -38,6 +38,7 @@ app.configure ->
 
   bundle = browserify {
     cache: false
+    watch: true
     ignore: [ 'templates' ]
     require: [
       './public/app/app.coffee'

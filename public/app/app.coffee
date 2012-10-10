@@ -26,12 +26,11 @@ class JukeboxApp extends Backbone.View
       console.log 'Player ready'
       @jukebox.setPlayer event.target
       @jukebox.changeChannel 'liquicity'
-      @jukebox.player.addEventListener 'onStateChange', 'window.Jukebox.onYoutubePlayerStateChange.fire'
 
     onStateChange = (event) =>
       @jukebox.onPlayerStateChanged.fire event.data
 
-    window.onYouTubeIframeAPIReady = =>
+    setupYoutubePlayer = =>
       console.log 'Youtube ready'
       player = new YT.Player(@playerId, {
         height: height
@@ -41,5 +40,10 @@ class JukeboxApp extends Backbone.View
           onReady: onPlayerReady
           onStateChange: onStateChange
       })
+
+    if window.YT
+      setupYoutubePlayer()
+    else
+      window.onYouTubeIframeAPIReady = setupYoutubePlayer
 
 module.exports = JukeboxApp

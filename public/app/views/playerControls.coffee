@@ -12,6 +12,7 @@ class PlayerControlsView extends Backbone.View
     "click #next":     "evNext"
     "click #shuffle":  "evShuffle"
     "click #loop":     "evLoop"
+    "click #progress-bar": "evProgressBarClicked"
 
   initialize: ->
     @render()
@@ -19,6 +20,7 @@ class PlayerControlsView extends Backbone.View
     window.jukebox.onVideoProgressTimeChanged.addHandler @onVideoProgressTimeChanged
     window.jukebox.onVideoLoadedProgressChanged.addHandler @onVideoLoadedProgressChanged
     window.jukebox.onLoadingNewPlaylist.addHandler @onLoadingNewPlaylist
+    window.jukebox.onPlayerStateChanged.addHandler @onPlayerStateChanged
 
   onLoadingNewPlaylist: (@playlist) =>
     console.log "Loading #{@playlist}"
@@ -31,8 +33,18 @@ class PlayerControlsView extends Backbone.View
     @$('.progress .bar').css('width', (@videoProgressTime / @totalPlayTime) * 100 + '%')
     @render()
 
+  formatTime: (seconds) ->
+    minutes = parseInt seconds / 60
+    seconds = parseInt seconds % 60
+    seconds = "0#{seconds}" if seconds < 10
+    return "#{minutes}:#{seconds}"
+
+  onPlayerStateChanged: (newState) =>
+    @$('.progress .status-text').text('Buffering...') if newState is Jukebox.PlayerState.BUFFERING
+
   onVideoProgressTimeChanged: (@videoProgressTime) =>
     @$('.progress .bar').css('width', (@videoProgressTime / @totalPlayTime) * 100 + '%')
+    @$('.progress .status-text').text @formatTime @videoProgressTime
 
   onVideoLoadedProgressChanged: =>
     # TODO
@@ -56,10 +68,17 @@ class PlayerControlsView extends Backbone.View
   evLoop: (event) ->
     window.jukebox.toggleLoop()
 
+  evProgressBarClicked: (event) =>
+    offsetClicked = event.offsetX
+    fullWidth = @$('#progress-bar').width()
+    percentToProgressTo = offsetClicked / fullWidth
+    window.jukebox.seekTo percentToProgressTo * @totalPlayTime
+
   render: ->
     @$el.html template {
       details: window.jukebox.nowPlayingInfo() or 'Select a channel to begin!'
       progressPercent: (@videoProgressTime / @totalPlayTime) * 100
+      statusText: 'Loading...'
     }
 
 module.exports = PlayerControlsView

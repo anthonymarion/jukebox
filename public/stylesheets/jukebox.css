@@ -7,10 +7,16 @@ body {
 #controls .row #control-box {
   background-color: rgba(170, 170, 170, 0.3);
 }
-#controls .media-controls a {
+#controls .media-controlsa {
   padding: 3px;
   color: black;
-}
-#controls .media-controls a :hover {
   text-decoration: none;
+}
+#controls .media-controlsa :hover {
+  text-decoration: none;
+}
+#controls .status-text {
+  position: absolute;
+  margin-left: 5px;
+  text-align: center;
 }

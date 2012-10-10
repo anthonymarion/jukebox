@@ -153,6 +153,9 @@ class Jukebox
     @playState = Jukebox.PlayState.STOPPED
     @player?.stopVideo()
 
+  seekTo: (seconds) ->
+    @player?.seekTo seconds
+
   setPlaylistAs: (results) =>
     # reset the current video in the case of loading a new station
     if results.success

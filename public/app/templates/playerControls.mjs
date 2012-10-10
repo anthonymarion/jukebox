@@ -1,11 +1,12 @@
 <div class="row">
-  <div class="span10 offset1" id="control-box">
-    <div class="span10">
+  <div class="span12" id="control-box">
+    <div class="span12">
       <h3 id="now-playing-info">{{details}}</h3>
     </div>
-    <div class="span6">
-      <div class="progress">
+    <div class="span8">
+      <div class="progress" id="progress-bar">
         <div class="bar" style="width: {{progressPercent}}%"></div>
+        <p class="status-text">{{statusText}}</p>
       </div>
     </div>
     <div class="span3 media-controls">

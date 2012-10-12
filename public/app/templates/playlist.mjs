@@ -1,13 +1,6 @@
-<div class="row song">
+<div class="row playlist">
   <div class="span12">
     <table class="table table-striped">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Title</th>
-          <th>Length</th>
-        </tr>
-      </thead>
       <tbody>
         {{#each songs}}
         <tr class="song" data-index="{{index}}">

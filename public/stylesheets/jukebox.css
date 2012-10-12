@@ -38,3 +38,6 @@ body {
 .volume-container #volume {
   width: 130px;
 }
+.playlist {
+  padding-top: 10px;
+}

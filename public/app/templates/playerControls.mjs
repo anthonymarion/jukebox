@@ -15,6 +15,9 @@
       <a id="next"><i class="icon-forward"></i></a>
       <a id="shuffle" class="{{#unless shuffle}}disabled{{/unless}}"><i class="icon-random"></i></a>
       <a id="loop" class="{{#unless loop}}disabled{{/unless}}"><i class="icon-repeat"></i></a>
+      <form class="volume-container">
+        <input id="volume" min="0" max="100" step="1" type="range" />
+      </form>
       <!--<a id="fullscreen"><i class="icon-fullscreen"></i></a>-->
     </div>
   </div>

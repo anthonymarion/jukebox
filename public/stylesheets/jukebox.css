@@ -12,12 +12,17 @@ body {
   background-color: rgba(170, 170, 170, 0.3);
 }
 #controls .media-controls a {
-  padding: 3px;
+  padding: 0px;
+  width: 16px;
+  height: 16px;
   color: black;
   text-decoration: none;
 }
 #controls .media-controls a :hover {
   text-decoration: none;
+}
+#controls .media-controls a i {
+  width: 14px;
 }
 #controls .media-controls a.disabled {
   color: #999999;
@@ -26,4 +31,10 @@ body {
   position: absolute;
   margin-left: 5px;
   text-align: center;
+}
+.volume-container {
+  display: inline;
+}
+.volume-container #volume {
+  width: 130px;
 }

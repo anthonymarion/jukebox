@@ -12,6 +12,7 @@ class PlayerControlsView extends Backbone.View
     "click #shuffle":       "evShuffle"
     "click #loop":          "evLoop"
     "click #progress-bar":  "evProgressBarClicked"
+    "change #volume":       "evVolumeChanged"
 
   initialize: ->
     @render()
@@ -54,6 +55,7 @@ class PlayerControlsView extends Backbone.View
     return "#{minutes}:#{seconds}"
 
   onPlayerStateChanged: (newState) =>
+    @$('#volume').val window.jukebox.getVolume()
     @$('.progress .status-text').text('Buffering...') if newState is Jukebox.PlayerState.BUFFERING
     @$('.progress .status-text').text('Loading...') if newState is Jukebox.PlayerState.UNSTARTED
 
@@ -96,6 +98,9 @@ class PlayerControlsView extends Backbone.View
     if event.charCode is 32
       window.jukebox.togglePlayPause()
       return false
+
+  evVolumeChanged: (event) =>
+    window.jukebox.setVolume $(event.currentTarget).val()
 
   render: ->
     @$el.html template {

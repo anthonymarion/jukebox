@@ -126,6 +126,12 @@ class Jukebox
       { id: 'karmincovers', name: 'Karmin Covers' }
     ]
 
+  getVolume: ->
+    @player.getVolume()
+
+  setVolume: (volume) ->
+    @player.setVolume volume
+
   getCurrentVideo: ->
     @playlist[@currentVideoIndex]
 

@@ -6,13 +6,12 @@ class PlayerControlsView extends Backbone.View
   totalPlayTime: 1
 
   events:
-    "click #play":     "evPlay"
-    "click #pause":    "evPause"
-    "click #back":     "evBack"
-    "click #next":     "evNext"
-    "click #shuffle":  "evShuffle"
-    "click #loop":     "evLoop"
-    "click #progress-bar": "evProgressBarClicked"
+    "click #playpause":     "evPlayPause"
+    "click #back":          "evBack"
+    "click #next":          "evNext"
+    "click #shuffle":       "evShuffle"
+    "click #loop":          "evLoop"
+    "click #progress-bar":  "evProgressBarClicked"
 
   initialize: ->
     @render()
@@ -21,6 +20,7 @@ class PlayerControlsView extends Backbone.View
     window.jukebox.onVideoLoadedProgressChanged.addHandler @onVideoLoadedProgressChanged
     window.jukebox.onLoadingNewPlaylist.addHandler @onLoadingNewPlaylist
     window.jukebox.onPlayerStateChanged.addHandler @onPlayerStateChanged
+    window.jukebox.onPlayStateChanged.addHandler @onPlayStateChanged
     window.jukebox.onLoopChanged.addHandler @onLoopChanged
     window.jukebox.onShuffleChanged.addHandler @onShuffleChanged
 
@@ -52,9 +52,14 @@ class PlayerControlsView extends Backbone.View
     return "#{minutes}:#{seconds}"
 
   onPlayerStateChanged: (newState) =>
-    console.log newState
     @$('.progress .status-text').text('Buffering...') if newState is Jukebox.PlayerState.BUFFERING
     @$('.progress .status-text').text('Loading...') if newState is Jukebox.PlayerState.UNSTARTED
+
+  onPlayStateChanged: (newState) =>
+    if newState is Jukebox.PlayState.PLAYING
+      @$('.media-controls #playpause i').removeClass().addClass('icon-pause')
+    else
+      @$('.media-controls #playpause i').removeClass().addClass('icon-play')
 
   onVideoProgressTimeChanged: (@videoProgressTime) =>
     @$('.progress .bar').css('width', (@videoProgressTime / @totalPlayTime) * 100 + '%')
@@ -64,11 +69,11 @@ class PlayerControlsView extends Backbone.View
     # TODO
     #@render()
 
-  evPlay: (event) ->
-    window.jukebox.play()
-
-  evPause: (event) ->
-    window.jukebox.pause()
+  evPlayPause: (event) =>
+    if window.jukebox.playState is Jukebox.PlayState.PLAYING
+      window.jukebox.pause()
+    else
+      window.jukebox.play()
 
   evBack: (event) ->
     window.jukebox.playPrev()

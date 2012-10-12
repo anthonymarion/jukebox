@@ -11,8 +11,7 @@
     </div>
     <div class="span3 media-controls">
       <a id="back"><i class="icon-backward"></i></a>
-      <a id="pause"><i class="icon-pause"></i></a>
-      <a id="play"><i class="icon-play"></i></a>
+      <a id="playpause"><i class="icon-play"></i></a>
       <a id="next"><i class="icon-forward"></i></a>
       <a id="shuffle" class="{{#unless shuffle}}disabled{{/unless}}"><i class="icon-random"></i></a>
       <a id="loop" class="{{#unless loop}}disabled{{/unless}}"><i class="icon-repeat"></i></a>

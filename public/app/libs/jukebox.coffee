@@ -61,6 +61,7 @@ class Jukebox
   onPlayStatusChanged:           new  Event()
   onSongEnded:                   new  Event()
   onPlayerStateChanged:          new  Event()
+  onPlayStateChanged:            new  Event()
   onVideoChanged:                new  Event()
   onVideoProgressTimeChanged:    new  Event()
   onVideoLoadedProgressChanged:  new  Event()
@@ -70,13 +71,17 @@ class Jukebox
   constructor: (@playerId) ->
     @setPlayer document.getElementById(@playerId)
 
-    @onPlayerStateChanged.addHandler (state) =>
-      console.log "Player state changed to #{state}"
-      @playNext() if state is Jukebox.PlayerState.ENDED
-
+    @onPlayerStateChanged.addHandler @evPlayerStateChanged
     Jukebox.onYoutubePlayerStateChange.addHandler @onPlayerStateChanged.fire
 
     setTimeout @updateLoop, @updateRate
+
+  evPlayerStateChanged: (state) =>
+    @playNext() if state is Jukebox.PlayerState.ENDED
+
+    @setPlayState Jukebox.PlayState.PLAYING if state is Jukebox.PlayerState.PLAYING
+    @setPlayState Jukebox.PlayState.PAUSED if state is Jukebox.PlayerState.PAUSED
+    @setPlayState Jukebox.PlayState.STOPPED if state is Jukebox.PlayerState.ENDED
 
   updateLoop: =>
     setTimeout @updateLoop, @updateRate
@@ -145,16 +150,16 @@ class Jukebox
     return @pause() if @playState is Jukebox.PlayState.PLAYING
     @play()
 
-  play: ->
-    @playState = Jukebox.PlayState.PLAYING
+  setPlayState: (@playState) ->
+    @onPlayStateChanged.fire @playState
+
+  play: =>
     @player?.playVideo()
 
   pause: ->
-    @playState = Jukebox.PlayState.PAUSED
     @player?.pauseVideo()
 
   stop: ->
-    @playState = Jukebox.PlayState.STOPPED
     @player?.stopVideo()
 
   seekTo: (seconds) ->
@@ -198,7 +203,6 @@ class Jukebox
       nextVideo = (@currentVideoIndex + 1) % @playlist.length
     else
       nextVideo = @currentVideoIndex + 1
-    console.log "Playing next video: #{nextVideo}"
 
     @playVideo nextVideo
 

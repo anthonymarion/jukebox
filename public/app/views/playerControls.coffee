@@ -24,6 +24,8 @@ class PlayerControlsView extends Backbone.View
     window.jukebox.onLoopChanged.addHandler @onLoopChanged
     window.jukebox.onShuffleChanged.addHandler @onShuffleChanged
 
+    $(window).keypress @evKeyPress
+
   onLoadingNewPlaylist: (@playlist) =>
     @$('#now-playing-info').text "Loading playlist #{@playlist}..."
 
@@ -70,10 +72,7 @@ class PlayerControlsView extends Backbone.View
     #@render()
 
   evPlayPause: (event) =>
-    if window.jukebox.playState is Jukebox.PlayState.PLAYING
-      window.jukebox.pause()
-    else
-      window.jukebox.play()
+    window.jukebox.togglePlayPause()
 
   evBack: (event) ->
     window.jukebox.playPrev()
@@ -92,6 +91,11 @@ class PlayerControlsView extends Backbone.View
     fullWidth = @$('#progress-bar').width()
     percentToProgressTo = offsetClicked / fullWidth
     window.jukebox.seekTo percentToProgressTo * @totalPlayTime
+
+  evKeyPress: (event) =>
+    if event.charCode is 32
+      window.jukebox.togglePlayPause()
+      return false
 
   render: ->
     @$el.html template {

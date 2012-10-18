@@ -20,6 +20,7 @@
     "backbone-browserify": "~0.9.2-1",
     "jquery-browserify": "~1.8.1",
     "jquery": "~1.7.3",
-    "htmlparser": "~1.7.6"
+    "htmlparser": "~1.7.6",
+    "pg": "~0.8.6"
   }
 }

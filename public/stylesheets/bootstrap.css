@@ -4835,14 +4835,16 @@ a.badge:hover {
   overflow: hidden;
   height: 20px;
   margin-bottom: 20px;
-  background-color: #f7f7f7;
-  background-image: -moz-linear-gradient(top, #f5f5f5, #f9f9f9);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f5f5f5), to(#f9f9f9));
-  background-image: -webkit-linear-gradient(top, #f5f5f5, #f9f9f9);
-  background-image: -o-linear-gradient(top, #f5f5f5, #f9f9f9);
-  background-image: linear-gradient(to bottom, #f5f5f5, #f9f9f9);
+  /*color: rgba(0, 0, 0, .6);*/
+
+  background-color: rgba(247, 247, 247, 0.5);
+  background-image: -moz-linear-gradient(top, rgba(245, 245, 245, 0.5), rgba(249, 249, 249, 0.5));
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(245, 245, 245, 0.5)), to(rgba(249, 249, 249, 0.5)));
+  background-image: -webkit-linear-gradient(top, rgba(245, 245, 245, 0.5), rgba(249, 249, 249, 0.5));
+  background-image: -o-linear-gradient(top, rgba(245, 245, 245, 0.5), rgba(249, 249, 249, 0.5));
+  background-image: linear-gradient(to bottom, rgba(245, 245, 245, 0.5), rgba(249, 249, 249, 0.5));
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff5f5f5', endColorstr='#fff9f9f9', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80f5f5f5', endColorstr='#80f9f9f9', GradientType=0);
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -4853,19 +4855,19 @@ a.badge:hover {
 .progress .bar {
   width: 0%;
   height: 100%;
-  color: #ffffff;
+  color: rgba(0, 0, 0, 0.25);
   float: left;
   font-size: 12px;
   text-align: center;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #0e90d2;
-  background-image: -moz-linear-gradient(top, #149bdf, #0480be);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#149bdf), to(#0480be));
-  background-image: -webkit-linear-gradient(top, #149bdf, #0480be);
-  background-image: -o-linear-gradient(top, #149bdf, #0480be);
-  background-image: linear-gradient(to bottom, #149bdf, #0480be);
+  background-color: rgba(159, 159, 159, 0.48);
+  background-image: -moz-linear-gradient(top, rgba(151, 151, 151, 0.4), rgba(167, 167, 167, 0.6));
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(151, 151, 151, 0.4)), to(rgba(167, 167, 167, 0.6)));
+  background-image: -webkit-linear-gradient(top, rgba(151, 151, 151, 0.4), rgba(167, 167, 167, 0.6));
+  background-image: -o-linear-gradient(top, rgba(151, 151, 151, 0.4), rgba(167, 167, 167, 0.6));
+  background-image: linear-gradient(to bottom, rgba(151, 151, 151, 0.4), rgba(167, 167, 167, 0.6));
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff149bdf', endColorstr='#ff0480be', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66979797', endColorstr='#99a7a7a7', GradientType=0);
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);

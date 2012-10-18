@@ -8,6 +8,7 @@ http        =  require  "http"
 path        =  require  "path"
 browserify  =  require  "browserify"
 fileify     =  require  "fileify"
+db          =  require  './database/connection'
 
 app = express()
 

@@ -119,6 +119,7 @@ class Jukebox
   @getChannels: ->
     [
       { id: 'liquicity', name: 'Liquicity' }
+      { id: 'aboveandbeyondtv', name: 'Above & Beyond TV' }
       { id: 'UKFMusic', name: 'UKF Music' }
       { id: 'UKFDubstep', name: 'UKF Dubstep' }
       { id: 'UKFMixes', name: 'UKF Mixes' }
